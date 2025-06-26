@@ -67,16 +67,22 @@ const AuthContainer: React.FC<AuthContainerProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card 
-        className="w-full max-w-sm shadow-xl border-0 rounded-2xl"
-        style={{
-          background: '#ffffff',
-        }}
-        bodyStyle={{ padding: '32px' }}
-      >
-        {renderAuthForm()}
-      </Card>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <Card 
+          className="shadow-2xl border-0 rounded-3xl backdrop-blur-sm"
+          style={{
+            background: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(10px)',
+          }}
+          bodyStyle={{ 
+            padding: '40px 32px',
+            borderRadius: '24px'
+          }}
+        >
+          {renderAuthForm()}
+        </Card>
+      </div>
     </div>
   );
 };
