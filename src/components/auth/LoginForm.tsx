@@ -3,6 +3,7 @@ import { Button, Form, Input, Checkbox, Divider, message } from 'antd';
 import { LockOutlined, MailOutlined, GoogleOutlined } from '@ant-design/icons';
 import type { AuthMode, LoginCredentials } from '../../types/auth';
 import { authService } from '../../services/authService';
+import { googleOAuthService } from '../../services/googleOAuthService';
 
 interface LoginFormProps {
   onSwitchMode: (mode: AuthMode) => void;
@@ -37,20 +38,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode }) => {
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
-      const result = await authService.googleAuth();
-      if (result.success) {
-        message.success(result.message);
-        console.log('Google login user:', result.user);
-        // TODO: Redirect to dashboard or update global auth state
-      } else {
-        message.error(result.message);
-      }
+      // Use real Google OAuth service
+      await googleOAuthService.initiateLogin();
     } catch (error) {
-      message.error('Google login failed. Please try again.');
+      message.error('Failed to initiate Google login. Please try again.');
       console.error('Google login error:', error);
-    } finally {
       setLoading(false);
     }
+    // Note: setLoading(false) is not called here because the page will redirect
   };
 
   return (

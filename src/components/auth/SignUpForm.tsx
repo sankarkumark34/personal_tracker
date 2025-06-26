@@ -3,6 +3,7 @@ import { Button, Form, Input, Divider, message } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined, GoogleOutlined } from '@ant-design/icons';
 import type { AuthMode, SignUpCredentials } from '../../types/auth';
 import { authService } from '../../services/authService';
+import { googleOAuthService } from '../../services/googleOAuthService';
 
 interface SignUpFormProps {
   onSwitchMode: (mode: AuthMode) => void;
@@ -38,20 +39,14 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode }) => {
   const handleGoogleSignUp = async () => {
     setLoading(true);
     try {
-      const result = await authService.googleAuth();
-      if (result.success) {
-        message.success(result.message);
-        console.log('Google sign up user:', result.user);
-        // TODO: Redirect to dashboard or update global auth state
-      } else {
-        message.error(result.message);
-      }
+      // Use real Google OAuth service
+      await googleOAuthService.initiateLogin();
     } catch (error) {
-      message.error('Google sign up failed. Please try again.');
+      message.error('Failed to initiate Google sign up. Please try again.');
       console.error('Google sign up error:', error);
-    } finally {
       setLoading(false);
     }
+    // Note: setLoading(false) is not called here because the page will redirect
   };
 
   return (
