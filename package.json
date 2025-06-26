@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
+    "@google-cloud/local-auth": "^3.0.1",
     "antd": "^5.26.2",
     "autoprefixer": "^10.4.21",
+    "google-auth-library": "^10.1.0",
     "postcss": "^8.5.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
