@@ -37,11 +37,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLogin }) => {
   };
 
   const handleGoogleLogin = async () => {
+    console.log('🔍 Google login button clicked - NEW CODE VERSION');
+    console.log('🔍 Current timestamp:', new Date().toISOString());
     setLoading(true);
     try {
+      console.log('🚀 Calling googleOAuthService.initiateLogin()');
+      console.log('🔍 googleOAuthService object:', googleOAuthService);
       // Use real Google OAuth service
       await googleOAuthService.initiateLogin();
+      console.log('✅ Google OAuth initiation successful');
     } catch (error) {
+      console.error('❌ Google OAuth initiation failed:', error);
       message.error('Failed to initiate Google login. Please try again.');
       console.error('Google login error:', error);
       setLoading(false);

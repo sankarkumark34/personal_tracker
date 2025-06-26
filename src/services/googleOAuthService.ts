@@ -49,19 +49,23 @@ export class GoogleOAuthService {
 
   // Initiate Google OAuth flow
   async initiateLogin(): Promise<void> {
+    console.log('🔍 GoogleOAuthService.initiateLogin() called');
     try {
       const state = this.generateState();
+      console.log('🔑 Generated state:', state);
       
       // Store state in sessionStorage for verification
       sessionStorage.setItem('oauth_state', state);
       
       // Create auth URL
       const authUrl = this.createAuthUrl(state);
+      console.log('🌐 Generated auth URL:', authUrl);
       
       // Redirect to Google OAuth
+      console.log('🚀 Redirecting to Google OAuth...');
       window.location.href = authUrl;
     } catch (error) {
-      console.error('Error initiating Google OAuth:', error);
+      console.error('❌ Error in GoogleOAuthService.initiateLogin():', error);
       throw new Error('Failed to initiate Google login');
     }
   }

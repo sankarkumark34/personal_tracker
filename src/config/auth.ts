@@ -13,7 +13,7 @@ export const AUTH_CONFIG = {
 } as const;
 
 export const OAUTH_ENDPOINTS = {
-  GOOGLE_AUTH_URL: 'https://accounts.google.com/oauth/authorize',
+  GOOGLE_AUTH_URL: 'https://accounts.google.com/o/oauth2/v2/auth',
   GOOGLE_TOKEN_URL: 'https://oauth2.googleapis.com/token',
   GOOGLE_USER_INFO: 'https://www.googleapis.com/oauth2/v2/userinfo',
 } as const;

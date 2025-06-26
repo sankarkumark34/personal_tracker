@@ -8,6 +8,7 @@ export interface SignUpCredentials {
   email: string;
   password: string;
   confirmPassword: string;
+  name?: string;
 }
 
 export interface ForgotPasswordData {
@@ -19,6 +20,13 @@ export interface User {
   email: string;
   name?: string;
   avatar?: string;
+  token?: string;
+}
+
+export interface AuthResponse {
+  success: boolean;
+  user?: User;
+  error?: string;
 }
 
 export interface AuthState {
