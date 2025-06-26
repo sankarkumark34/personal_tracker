@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, Checkbox, Divider, message } from 'antd';
 import { LockOutlined, MailOutlined, GoogleOutlined } from '@ant-design/icons';
-import type { AuthMode, LoginCredentials } from '../../types/auth';
+import type { AuthMode, LoginCredentials, User } from '../../types/auth';
 import { authService } from '../../services/authService';
 import { googleOAuthService } from '../../services/googleOAuthService';
 
 interface LoginFormProps {
   onSwitchMode: (mode: AuthMode) => void;
+  onLogin: (user: User) => void;
 }
 
 // Using LoginCredentials type from auth types
 type LoginFormValues = LoginCredentials & { remember: boolean };
 
-const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLogin }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
@@ -20,10 +21,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode }) => {
     setLoading(true);
     try {
       const result = await authService.login(values);
-      if (result.success) {
+      if (result.success && result.user) {
         message.success(result.message);
         console.log('Logged in user:', result.user);
-        // TODO: Redirect to dashboard or update global auth state
+        onLogin(result.user);
       } else {
         message.error(result.message);
       }

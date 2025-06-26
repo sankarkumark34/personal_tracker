@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, Divider, message } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined, GoogleOutlined } from '@ant-design/icons';
-import type { AuthMode, SignUpCredentials } from '../../types/auth';
+import type { AuthMode, SignUpCredentials, User } from '../../types/auth';
 import { authService } from '../../services/authService';
 import { googleOAuthService } from '../../services/googleOAuthService';
 
 interface SignUpFormProps {
   onSwitchMode: (mode: AuthMode) => void;
+  onLogin: (user: User) => void;
 }
 
 // Using SignUpCredentials type from auth types
 type SignUpFormValues = SignUpCredentials;
 
-const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode }) => {
+const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode, onLogin }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
@@ -20,11 +21,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode }) => {
     setLoading(true);
     try {
       const result = await authService.signUp(values);
-      if (result.success) {
+      if (result.success && result.user) {
         message.success(result.message);
         console.log('Created user:', result.user);
-        // TODO: Redirect to dashboard or update global auth state
-        setTimeout(() => onSwitchMode('login'), 1500);
+        onLogin(result.user);
       } else {
         message.error(result.message);
       }
