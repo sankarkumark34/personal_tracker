@@ -5,6 +5,7 @@ import {
   sendPasswordResetEmail,
   signInWithPopup,
   updateProfile,
+  onAuthStateChanged,
   type User as FirebaseUser
 } from 'firebase/auth';
 import { auth, googleProvider } from '@/config/firebase';
@@ -214,7 +215,7 @@ export class FirebaseAuthService {
 
   // Auth State Change Listener
   onAuthStateChange(callback: (user: User | null) => void): () => void {
-    return auth.onAuthStateChanged((firebaseUser) => {
+    return onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
         callback(this.mapFirebaseUser(firebaseUser));
       } else {
