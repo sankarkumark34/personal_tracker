@@ -19,6 +19,7 @@ const AuthTest: React.FC = () => {
       const currentUser = firebaseAuthService.getCurrentUser();
       setResult(`Firebase connection successful! Current user: ${currentUser ? currentUser.email : 'No user logged in'}`);
     } catch (error) {
+        
       setResult(`Firebase connection failed: ${error}`);
     } finally {
       setLoading(false);

@@ -1,8 +1,10 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Button, Form, Input, Divider, message } from 'antd';
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
-import type { AuthMode, SignUpCredentials, User } from '../../types/auth';
-import { firebaseAuthService } from '../../services/firebaseAuthService';
+import type { AuthMode, SignUpCredentials, User } from '@/types/auth';
+import { firebaseAuthService } from '@/services/firebaseAuthService';
 import GoogleSignInButton from './GoogleSignInButton';
 
 interface SignUpFormProps {
@@ -36,8 +38,6 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode, onLogin }) => {
       setLoading(false);
     }
   };
-
-
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -177,7 +177,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode, onLogin }) => {
       <GoogleSignInButton onLogin={onLogin} loading={loading} />
 
       {/* Sign In Link */}
-      <div className="text-center">
+      <div className="text-center mt-8">
         <span className="text-gray-600 text-sm">Already have an account? </span>
         <Button
           type="link"

@@ -1,8 +1,10 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Button, Form, Input, message } from 'antd';
 import { MailOutlined, ArrowLeftOutlined } from '@ant-design/icons';
-import type { AuthMode, ForgotPasswordData } from '../../types/auth';
-import { firebaseAuthService } from '../../services/firebaseAuthService';
+import type { AuthMode, ForgotPasswordData } from '@/types/auth';
+import { firebaseAuthService } from '@/services/firebaseAuthService';
 
 interface ForgotPasswordFormProps {
   onSwitchMode: (mode: AuthMode) => void;
