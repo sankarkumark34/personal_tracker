@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, Divider, message } from 'antd';
-import { MailOutlined, LockOutlined, GoogleOutlined } from '@ant-design/icons';
+import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import type { AuthMode, SignUpCredentials, User } from '../../types/auth';
-import { authService } from '../../services/authService';
-import { googleOAuthService } from '../../services/googleOAuthService';
+import { firebaseAuthService } from '../../services/firebaseAuthService';
+import GoogleSignInButton from './GoogleSignInButton';
 
 interface SignUpFormProps {
   onSwitchMode: (mode: AuthMode) => void;
@@ -20,7 +20,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode, onLogin }) => {
   const handleSubmit = async (values: SignUpFormValues) => {
     setLoading(true);
     try {
-      const result = await authService.signUp(values);
+      const result = await firebaseAuthService.signUp(values);
       if (result.success && result.user) {
         message.success(result.message);
         console.log('Created user:', result.user);
@@ -37,18 +37,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode, onLogin }) => {
     }
   };
 
-  const handleGoogleSignUp = async () => {
-    setLoading(true);
-    try {
-      // Use real Google OAuth service
-      await googleOAuthService.initiateLogin();
-    } catch (error) {
-      message.error('Failed to initiate Google sign up. Please try again.');
-      console.error('Google sign up error:', error);
-      setLoading(false);
-    }
-    // Note: setLoading(false) is not called here because the page will redirect
-  };
+
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -68,6 +57,26 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode, onLogin }) => {
         requiredMark={false}
         className="space-y-4"
       >
+        {/* Name Field */}
+        <Form.Item
+          label={<span className="text-gray-700 font-medium text-sm">Full Name</span>}
+          name="name"
+          rules={[
+            { required: true, message: 'Please input your name!' },
+            { min: 2, message: 'Name must be at least 2 characters!' }
+          ]}
+          className="mb-4"
+        >
+          <Input
+            placeholder="Enter your full name"
+            className="h-12 rounded-lg border-gray-300 hover:border-blue-400 focus:border-blue-500"
+            style={{ 
+              fontSize: '14px',
+              backgroundColor: '#ffffff'
+            }}
+          />
+        </Form.Item>
+
         {/* Email Field */}
         <Form.Item
           label={<span className="text-gray-700 font-medium text-sm">Email address</span>}
@@ -165,17 +174,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode, onLogin }) => {
       </Divider>
 
       {/* Google Sign Up Button */}
-      <Button
-        type="default"
-        size="large"
-        block
-        icon={<GoogleOutlined className="text-lg" />}
-        onClick={handleGoogleSignUp}
-        loading={loading}
-        className="h-12 rounded-lg border-2 border-gray-300 hover:border-gray-400 hover:shadow-md text-gray-700 font-semibold text-base transition-all duration-200 mb-6"
-      >
-        Continue with Google
-      </Button>
+      <GoogleSignInButton onLogin={onLogin} loading={loading} />
 
       {/* Sign In Link */}
       <div className="text-center">

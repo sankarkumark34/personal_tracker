@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Form, Input, message } from 'antd';
 import { MailOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import type { AuthMode, ForgotPasswordData } from '../../types/auth';
-import { authService } from '../../services/authService';
+import { firebaseAuthService } from '../../services/firebaseAuthService';
 
 interface ForgotPasswordFormProps {
   onSwitchMode: (mode: AuthMode) => void;
@@ -18,7 +18,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSwitchMode })
   const handleSubmit = async (values: ForgotPasswordFormValues) => {
     setLoading(true);
     try {
-      const result = await authService.forgotPassword(values);
+      const result = await firebaseAuthService.forgotPassword(values);
       if (result.success) {
         message.success(result.message);
         setTimeout(() => onSwitchMode('login'), 2000);
