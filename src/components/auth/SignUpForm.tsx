@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, Divider, message } from 'antd';
-import { UserOutlined, MailOutlined, LockOutlined, GoogleOutlined } from '@ant-design/icons';
-import type { AuthMode, SignUpCredentials } from '../../types/auth';
+import { MailOutlined, LockOutlined, GoogleOutlined } from '@ant-design/icons';
+import type { AuthMode, SignUpCredentials, User } from '../../types/auth';
 import { authService } from '../../services/authService';
 import { googleOAuthService } from '../../services/googleOAuthService';
 
 interface SignUpFormProps {
   onSwitchMode: (mode: AuthMode) => void;
+  onLogin: (user: User) => void;
 }
 
 // Using SignUpCredentials type from auth types
 type SignUpFormValues = SignUpCredentials;
 
-const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode }) => {
+const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode, onLogin }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
@@ -20,11 +21,11 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode }) => {
     setLoading(true);
     try {
       const result = await authService.signUp(values);
-      if (result.success) {
+      if (result.success && result.user) {
         message.success(result.message);
         console.log('Created user:', result.user);
-        // TODO: Redirect to dashboard or update global auth state
-        setTimeout(() => onSwitchMode('login'), 1500);
+        // Auto login after successful signup
+        onLogin(result.user);
       } else {
         message.error(result.message);
       }
@@ -50,34 +51,12 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode }) => {
   };
 
   return (
-    <div>
-      {/* Header with Icon */}
+    <div className="w-full max-w-md mx-auto">
+      {/* Header */}
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-xl mb-4">
-          <UserOutlined className="text-lg text-green-600" />
-        </div>
-        <h1 className="text-2xl font-semibold text-gray-900 mb-2">Create your account</h1>
-        <p className="text-gray-500 text-sm">Sign up to get started with your account</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
+        <p className="text-gray-600">Sign up to get started with your account</p>
       </div>
-
-      {/* Google Sign Up Button */}
-      <Button
-        type="default"
-        size="large"
-        block
-        icon={<GoogleOutlined />}
-        onClick={handleGoogleSignUp}
-        loading={loading}
-        className="mb-6 h-12 border border-gray-300 hover:border-gray-400 text-gray-700 font-medium"
-        style={{ borderRadius: '8px' }}
-      >
-        Continue with Google
-      </Button>
-
-      {/* Divider */}
-      <Divider className="my-6">
-        <span className="text-gray-400 text-xs font-medium">OR CONTINUE WITH EMAIL</span>
-      </Divider>
 
       {/* Sign Up Form */}
       <Form
@@ -87,41 +66,53 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode }) => {
         layout="vertical"
         size="large"
         requiredMark={false}
+        className="space-y-4"
       >
+        {/* Email Field */}
         <Form.Item
-          label={<span className="text-gray-700 text-sm font-medium">Email address</span>}
+          label={<span className="text-gray-700 font-medium text-sm">Email address</span>}
           name="email"
           rules={[
             { required: true, message: 'Please input your email!' },
             { type: 'email', message: 'Please enter a valid email!' }
           ]}
+          className="mb-4"
         >
           <Input
-            prefix={<MailOutlined className="text-gray-400" />}
+            prefix={<MailOutlined className="text-gray-400 mr-2" />}
             placeholder="Enter your email"
-            className="h-12 border-gray-300"
-            style={{ borderRadius: '8px' }}
+            className="h-12 rounded-lg border-gray-300 hover:border-blue-400 focus:border-blue-500"
+            style={{ 
+              fontSize: '14px',
+              backgroundColor: '#ffffff'
+            }}
           />
         </Form.Item>
 
+        {/* Password Field */}
         <Form.Item
-          label={<span className="text-gray-700 text-sm font-medium">Password</span>}
+          label={<span className="text-gray-700 font-medium text-sm">Password</span>}
           name="password"
           rules={[
             { required: true, message: 'Please input your password!' },
             { min: 6, message: 'Password must be at least 6 characters!' }
           ]}
+          className="mb-4"
         >
           <Input.Password
-            prefix={<LockOutlined className="text-gray-400" />}
+            prefix={<LockOutlined className="text-gray-400 mr-2" />}
             placeholder="Create a password"
-            className="h-12 border-gray-300"
-            style={{ borderRadius: '8px' }}
+            className="h-12 rounded-lg border-gray-300 hover:border-blue-400 focus:border-blue-500"
+            style={{ 
+              fontSize: '14px',
+              backgroundColor: '#ffffff'
+            }}
           />
         </Form.Item>
 
+        {/* Confirm Password Field */}
         <Form.Item
-          label={<span className="text-gray-700 text-sm font-medium">Confirm Password</span>}
+          label={<span className="text-gray-700 font-medium text-sm">Confirm Password</span>}
           name="confirmPassword"
           dependencies={['password']}
           rules={[
@@ -135,28 +126,32 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode }) => {
               },
             }),
           ]}
+          className="mb-6"
         >
           <Input.Password
-            prefix={<LockOutlined className="text-gray-400" />}
+            prefix={<LockOutlined className="text-gray-400 mr-2" />}
             placeholder="Confirm your password"
-            className="h-12 border-gray-300"
-            style={{ borderRadius: '8px' }}
+            className="h-12 rounded-lg border-gray-300 hover:border-blue-400 focus:border-blue-500"
+            style={{ 
+              fontSize: '14px',
+              backgroundColor: '#ffffff'
+            }}
           />
         </Form.Item>
 
-        {/* Submit Button */}
-        <Form.Item className="mt-6">
+        {/* Create Account Button */}
+        <Form.Item className="mb-6">
           <Button
             type="primary"
             htmlType="submit"
             size="large"
             block
             loading={loading}
-            className="h-12 font-medium"
+            className="h-12 rounded-lg font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-200"
             style={{ 
-              borderRadius: '8px',
-              background: 'linear-gradient(135deg, #10b981 0%, #3b82f6 100%)',
-              border: 'none'
+              background: 'linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #8b5cf6 100%)',
+              border: 'none',
+              boxShadow: '0 4px 14px 0 rgba(16, 185, 129, 0.4)'
             }}
           >
             Create account
@@ -164,13 +159,31 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode }) => {
         </Form.Item>
       </Form>
 
+      {/* Divider */}
+      <Divider className="my-8">
+        <span className="text-gray-400 text-sm font-medium px-4">OR</span>
+      </Divider>
+
+      {/* Google Sign Up Button */}
+      <Button
+        type="default"
+        size="large"
+        block
+        icon={<GoogleOutlined className="text-lg" />}
+        onClick={handleGoogleSignUp}
+        loading={loading}
+        className="h-12 rounded-lg border-2 border-gray-300 hover:border-gray-400 hover:shadow-md text-gray-700 font-semibold text-base transition-all duration-200 mb-6"
+      >
+        Continue with Google
+      </Button>
+
       {/* Sign In Link */}
-      <div className="text-center mt-6">
+      <div className="text-center">
         <span className="text-gray-600 text-sm">Already have an account? </span>
         <Button
           type="link"
           onClick={() => onSwitchMode('login')}
-          className="p-0 text-blue-600 hover:text-blue-700 font-medium text-sm"
+          className="p-0 h-auto text-blue-600 hover:text-blue-700 font-semibold text-sm"
         >
           Sign in
         </Button>
