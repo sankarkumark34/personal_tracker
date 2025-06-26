@@ -94,23 +94,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLogin }) => {
         </Form.Item>
 
         {/* Remember Me & Forgot Password Row */}
-        <div className="flex items-center justify-between mb-8">
-          <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox className="text-gray-600 text-sm font-medium">
-              Remember me
-            </Checkbox>
-          </Form.Item>
-          <Button
-            type="link"
-            onClick={() => onSwitchMode('forgot-password')}
-            className="p-0 h-auto text-blue-600 hover:text-blue-700 text-sm font-medium hover:underline"
-          >
-            Forgot your password?
-          </Button>
-        </div>
+
 
         {/* Sign In Button */}
-        <Form.Item className="mb-0">
+        <Form.Item className="mb-0 mt-4 ">
           <Button
             type="primary"
             htmlType="submit"
@@ -127,7 +114,23 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLogin }) => {
             Sign in
           </Button>
         </Form.Item>
+
+        <div className="flex items-center justify-between mb-8">
+          <Form.Item name="remember" valuePropName="checked" noStyle>
+            <Checkbox className="text-gray-600 text-sm font-medium">
+              Remember me
+            </Checkbox>
+          </Form.Item>
+          <Button
+            type="link"
+            onClick={() => onSwitchMode('forgot-password')}
+            className="p-0 h-auto text-blue-600 hover:text-blue-700 text-sm font-medium hover:underline"
+          >
+            Forgot your password?
+          </Button>
+        </div>
       </Form>
+
     </div>
   );
 };
