@@ -3,10 +3,10 @@ import {
   createUserWithEmailAndPassword, 
   sendPasswordResetEmail,
   signOut,
-  User
+  type User
 } from 'firebase/auth';
 import { auth } from '../config/firebase';
-import { AuthResponse, LoginCredentials, SignUpCredentials } from '../types/auth';
+import type { AuthResponse, LoginCredentials, SignUpCredentials } from '../types/auth';
 
 export class FirebaseAuthService {
   // Login with email and password
@@ -28,10 +28,11 @@ export class FirebaseAuthService {
           token: await user.getIdToken()
         }
       };
-    } catch (error: any) {
+    } catch (error) {
+      const errorCode = (error as { code?: string }).code || 'unknown';
       return {
         success: false,
-        error: this.getErrorMessage(error.code)
+        error: this.getErrorMessage(errorCode)
       };
     }
   }
@@ -55,10 +56,11 @@ export class FirebaseAuthService {
           token: await user.getIdToken()
         }
       };
-    } catch (error: any) {
+    } catch (error) {
+      const errorCode = (error as { code?: string }).code || 'unknown';
       return {
         success: false,
-        error: this.getErrorMessage(error.code)
+        error: this.getErrorMessage(errorCode)
       };
     }
   }
@@ -68,10 +70,11 @@ export class FirebaseAuthService {
     try {
       await sendPasswordResetEmail(auth, email);
       return { success: true };
-    } catch (error: any) {
+    } catch (error) {
+      const errorCode = (error as { code?: string }).code || 'unknown';
       return {
         success: false,
-        error: this.getErrorMessage(error.code)
+        error: this.getErrorMessage(errorCode)
       };
     }
   }

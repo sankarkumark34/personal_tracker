@@ -1,60 +1,77 @@
 import React, { useState } from 'react';
 import { Button, Form, Input, message } from 'antd';
 import { MailOutlined, ArrowLeftOutlined } from '@ant-design/icons';
-import type { AuthMode, ForgotPasswordData } from '../../types/auth';
-import { authService } from '../../services/authService';
+import type { ForgotPasswordData } from '../../types/auth';
+import { FirebaseAuthService } from '../../services/firebaseAuthService';
 
 interface ForgotPasswordFormProps {
-  onSwitchMode: (mode: AuthMode) => void;
+  onSwitchToLogin: () => void;
 }
 
-// Using ForgotPasswordData type from auth types
-type ForgotPasswordFormValues = ForgotPasswordData;
-
-const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSwitchMode }) => {
-  const [form] = Form.useForm();
+const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSwitchToLogin }) => {
   const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
-  const handleSubmit = async (values: ForgotPasswordFormValues) => {
+  const handleSubmit = async (values: ForgotPasswordData) => {
     setLoading(true);
     try {
-      const result = await authService.forgotPassword(values);
-      if (result.success) {
-        message.success(result.message);
-        setTimeout(() => onSwitchMode('login'), 2000);
+      const response = await FirebaseAuthService.resetPassword(values.email);
+      
+      if (response.success) {
+        message.success('Password reset email sent successfully!');
+        setEmailSent(true);
       } else {
-        message.error(result.message);
+        message.error(response.error || 'Failed to send reset email');
       }
-    } catch (error) {
+    } catch {
       message.error('Failed to send reset email. Please try again.');
-      console.error('Forgot password error:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div>
-      {/* Header with Icon */}
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-12 h-12 bg-orange-100 rounded-xl mb-4">
-          <MailOutlined className="text-lg text-orange-600" />
+  if (emailSent) {
+    return (
+      <div className="w-full max-w-md mx-auto text-center">
+        <div className="mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+            <MailOutlined className="text-2xl text-green-600" />
+          </div>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Check Your Email</h2>
+          <p className="text-gray-600">
+            We've sent a password reset link to your email address. 
+            Please check your inbox and follow the instructions to reset your password.
+          </p>
         </div>
-        <h1 className="text-2xl font-semibold text-gray-900 mb-2">Reset your password</h1>
-        <p className="text-gray-500 text-sm">Enter your email address and we'll send you a reset link</p>
+
+        <Button
+          type="primary"
+          onClick={onSwitchToLogin}
+          className="w-full bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-blue-700 rounded-lg h-12 text-base font-medium"
+        >
+          Back to Sign In
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full max-w-md mx-auto">
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-2">Forgot Password</h2>
+        <p className="text-gray-600">
+          Enter your email address and we'll send you a link to reset your password
+        </p>
       </div>
 
-      {/* Forgot Password Form */}
       <Form
-        form={form}
         name="forgot-password"
         onFinish={handleSubmit}
+        autoComplete="off"
         layout="vertical"
-        size="large"
-        requiredMark={false}
+        className="space-y-4"
       >
         <Form.Item
-          label={<span className="text-gray-700 text-sm font-medium">Email address</span>}
           name="email"
           rules={[
             { required: true, message: 'Please input your email!' },
@@ -63,43 +80,34 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSwitchMode })
         >
           <Input
             prefix={<MailOutlined className="text-gray-400" />}
-            placeholder="Enter your email"
-            className="h-12 border-gray-300"
-            style={{ borderRadius: '8px' }}
+            placeholder="Email"
+            size="large"
+            className="rounded-lg"
           />
         </Form.Item>
 
-        {/* Submit Button */}
-        <Form.Item className="mt-6">
+        <Form.Item>
           <Button
             type="primary"
             htmlType="submit"
-            size="large"
-            block
             loading={loading}
-            className="h-12 font-medium"
-            style={{ 
-              borderRadius: '8px',
-              background: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
-              border: 'none'
-            }}
+            className="w-full bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-blue-700 rounded-lg h-12 text-base font-medium"
           >
-            Send reset email
+            Send Reset Link
           </Button>
         </Form.Item>
-      </Form>
 
-      {/* Back to Sign In Link */}
-      <div className="text-center mt-6">
-        <Button
-          type="link"
-          onClick={() => onSwitchMode('login')}
-          icon={<ArrowLeftOutlined />}
-          className="p-0 text-blue-600 hover:text-blue-700 font-medium text-sm"
-        >
-          Back to sign in
-        </Button>
-      </div>
+        <div className="text-center mt-6">
+          <Button 
+            type="link" 
+            onClick={onSwitchToLogin}
+            icon={<ArrowLeftOutlined />}
+            className="p-0 text-blue-600 hover:text-blue-800 font-medium"
+          >
+            Back to Sign In
+          </Button>
+        </div>
+      </Form>
     </div>
   );
 };
