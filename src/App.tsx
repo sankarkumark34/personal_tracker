@@ -1,53 +1,35 @@
-import React, { useState } from 'react';
-import { ConfigProvider } from 'antd';
-import AuthContainer from './components/auth/AuthContainer';
-import Dashboard from './components/Dashboard';
-import OAuthDebug from './components/auth/OAuthDebug';
-import type { User } from './types/auth';
-import './App.css';
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
 
-const App: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const handleLogin = (userData: User) => {
-    setUser(userData);
-    setIsAuthenticated(true);
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
-    // Clear any stored auth data
-    sessionStorage.clear();
-    localStorage.clear();
-  };
-
-  // Check if current URL is for OAuth debug
-  const isDebugMode = window.location.pathname === '/oauth-debug' || window.location.search.includes('debug=oauth');
+function App() {
+  const [count, setCount] = useState(0)
 
   return (
-    <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: '#6366f1',
-          borderRadius: 8,
-        },
-      }}
-    >
-      {isDebugMode ? (
-        <div className="min-h-screen bg-gray-100">
-          <OAuthDebug />
-        </div>
-      ) : isAuthenticated && user ? (
-        <Dashboard user={user} onLogout={handleLogout} />
-      ) : (
-        <div className="min-h-screen bg-gray-900">
-          <AuthContainer onLogin={handleLogin} />
-        </div>
-      )}
-    </ConfigProvider>
-  );
-};
+    <>
+      <div>
+        <a href="https://vite.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
+      </div>
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.tsx</code> and save to test HMR
+        </p>
+      </div>
+      <p className="read-the-docs">
+        Click on the Vite and React logos to learn more
+      </p>
+    </>
+  )
+}
 
-export default App;
+export default App
