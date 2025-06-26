@@ -1,8 +1,10 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Button, message } from 'antd';
 import { GoogleOutlined } from '@ant-design/icons';
-import { firebaseAuthService } from '../../services/firebaseAuthService';
-import type { User } from '../../types/auth';
+import { firebaseAuthService } from '@/services/firebaseAuthService';
+import type { User } from '@/types/auth';
 
 interface GoogleSignInButtonProps {
   onLogin: (user: User) => void;
