@@ -34,14 +34,14 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSwitchMode })
   };
 
   return (
-    <div className="p-6">
+    <div>
       {/* Header with Icon */}
-      <div className="text-center mb-6">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-2xl mb-4">
-          <MailOutlined className="text-2xl text-orange-600" />
+      <div className="text-center mb-8">
+        <div className="inline-flex items-center justify-center w-12 h-12 bg-orange-100 rounded-xl mb-4">
+          <MailOutlined className="text-lg text-orange-600" />
         </div>
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Reset your password</h1>
-        <p className="text-gray-600">Enter your email address and we'll send you a reset link</p>
+        <h1 className="text-2xl font-semibold text-gray-900 mb-2">Reset your password</h1>
+        <p className="text-gray-500 text-sm">Enter your email address and we'll send you a reset link</p>
       </div>
 
       {/* Forgot Password Form */}
@@ -54,7 +54,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSwitchMode })
         requiredMark={false}
       >
         <Form.Item
-          label="Email address"
+          label={<span className="text-gray-700 text-sm font-medium">Email address</span>}
           name="email"
           rules={[
             { required: true, message: 'Please input your email!' },
@@ -64,7 +64,8 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSwitchMode })
           <Input
             prefix={<MailOutlined className="text-gray-400" />}
             placeholder="Enter your email"
-            className="h-12"
+            className="h-12 border-gray-300"
+            style={{ borderRadius: '8px' }}
           />
         </Form.Item>
 
@@ -76,7 +77,12 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSwitchMode })
             size="large"
             block
             loading={loading}
-            className="h-12 bg-gradient-to-r from-orange-600 to-red-600 border-0 hover:from-orange-700 hover:to-red-700"
+            className="h-12 font-medium"
+            style={{ 
+              borderRadius: '8px',
+              background: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
+              border: 'none'
+            }}
           >
             Send reset email
           </Button>
@@ -89,7 +95,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({ onSwitchMode })
           type="link"
           onClick={() => onSwitchMode('login')}
           icon={<ArrowLeftOutlined />}
-          className="p-0 text-orange-600 hover:text-orange-700 font-medium"
+          className="p-0 text-blue-600 hover:text-blue-700 font-medium text-sm"
         >
           Back to sign in
         </Button>

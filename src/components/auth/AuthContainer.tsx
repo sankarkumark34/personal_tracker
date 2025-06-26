@@ -24,11 +24,11 @@ const AuthContainer: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <Card 
-        className="w-full max-w-md shadow-2xl border-0"
+        className="w-full max-w-sm shadow-xl border-0 rounded-2xl"
         style={{
-          background: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(10px)',
+          background: '#ffffff',
         }}
+        bodyStyle={{ padding: '32px' }}
       >
         {renderAuthForm()}
       </Card>
