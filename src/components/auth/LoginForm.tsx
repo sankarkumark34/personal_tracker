@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Button, Form, Input, Checkbox, message } from 'antd';
 import { LockOutlined, MailOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import type { AuthMode, LoginCredentials, User } from '../../types/auth';
-import { authService } from '../../services/authService';
+import { firebaseAuthService } from '../../services/firebaseAuthService';
+import GoogleSignInButton from './GoogleSignInButton';
 
 interface LoginFormProps {
   onSwitchMode: (mode: AuthMode) => void;
@@ -19,7 +20,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLogin }) => {
   const handleSubmit = async (values: LoginFormValues) => {
     setLoading(true);
     try {
-      const result = await authService.login(values);
+      const result = await firebaseAuthService.login(values);
       if (result.success && result.user) {
         message.success(result.message);
         console.log('Logged in user:', result.user);
@@ -130,6 +131,28 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchMode, onLogin }) => {
           </Button>
         </div>
       </Form>
+
+      {/* Divider */}
+      <div className="flex items-center my-6">
+        <div className="flex-1 border-t border-gray-300"></div>
+        <span className="px-4 text-gray-500 text-sm">or</span>
+        <div className="flex-1 border-t border-gray-300"></div>
+      </div>
+
+      {/* Google Sign In Button */}
+      <GoogleSignInButton onLogin={onLogin} loading={loading} />
+
+      {/* Sign Up Link */}
+      <div className="text-center mt-8">
+        <span className="text-gray-600 text-sm">Don't have an account? </span>
+        <Button
+          type="link"
+          onClick={() => onSwitchMode('signup')}
+          className="p-0 h-auto text-blue-600 hover:text-blue-700 text-sm font-medium hover:underline"
+        >
+          Sign up here
+        </Button>
+      </div>
 
     </div>
   );
