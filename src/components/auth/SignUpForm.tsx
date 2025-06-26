@@ -55,32 +55,33 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode }) => {
   };
 
   return (
-    <div className="p-6">
+    <div>
       {/* Header with Icon */}
-      <div className="text-center mb-6">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-2xl mb-4">
-          <UserOutlined className="text-2xl text-green-600" />
+      <div className="text-center mb-8">
+        <div className="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-xl mb-4">
+          <UserOutlined className="text-lg text-green-600" />
         </div>
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Create your account</h1>
-        <p className="text-gray-600">Sign up to get started with your account</p>
+        <h1 className="text-2xl font-semibold text-gray-900 mb-2">Create your account</h1>
+        <p className="text-gray-500 text-sm">Sign up to get started with your account</p>
       </div>
 
       {/* Google Sign Up Button */}
-              <Button
-          type="default"
-          size="large"
-          block
-          icon={<GoogleOutlined />}
-          onClick={handleGoogleSignUp}
-          loading={loading}
-          className="mb-6 h-12 border-gray-300 hover:border-green-400 hover:text-green-600"
-        >
-          Continue with Google
-        </Button>
+      <Button
+        type="default"
+        size="large"
+        block
+        icon={<GoogleOutlined />}
+        onClick={handleGoogleSignUp}
+        loading={loading}
+        className="mb-6 h-12 border border-gray-300 hover:border-gray-400 text-gray-700 font-medium"
+        style={{ borderRadius: '8px' }}
+      >
+        Continue with Google
+      </Button>
 
       {/* Divider */}
       <Divider className="my-6">
-        <span className="text-gray-500 text-sm">OR CONTINUE WITH EMAIL</span>
+        <span className="text-gray-400 text-xs font-medium">OR CONTINUE WITH EMAIL</span>
       </Divider>
 
       {/* Sign Up Form */}
@@ -93,7 +94,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode }) => {
         requiredMark={false}
       >
         <Form.Item
-          label="Email address"
+          label={<span className="text-gray-700 text-sm font-medium">Email address</span>}
           name="email"
           rules={[
             { required: true, message: 'Please input your email!' },
@@ -103,12 +104,13 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode }) => {
           <Input
             prefix={<MailOutlined className="text-gray-400" />}
             placeholder="Enter your email"
-            className="h-12"
+            className="h-12 border-gray-300"
+            style={{ borderRadius: '8px' }}
           />
         </Form.Item>
 
         <Form.Item
-          label="Password"
+          label={<span className="text-gray-700 text-sm font-medium">Password</span>}
           name="password"
           rules={[
             { required: true, message: 'Please input your password!' },
@@ -118,12 +120,13 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode }) => {
           <Input.Password
             prefix={<LockOutlined className="text-gray-400" />}
             placeholder="Create a password"
-            className="h-12"
+            className="h-12 border-gray-300"
+            style={{ borderRadius: '8px' }}
           />
         </Form.Item>
 
         <Form.Item
-          label="Confirm Password"
+          label={<span className="text-gray-700 text-sm font-medium">Confirm Password</span>}
           name="confirmPassword"
           dependencies={['password']}
           rules={[
@@ -141,7 +144,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode }) => {
           <Input.Password
             prefix={<LockOutlined className="text-gray-400" />}
             placeholder="Confirm your password"
-            className="h-12"
+            className="h-12 border-gray-300"
+            style={{ borderRadius: '8px' }}
           />
         </Form.Item>
 
@@ -153,7 +157,12 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode }) => {
             size="large"
             block
             loading={loading}
-            className="h-12 bg-gradient-to-r from-green-600 to-blue-600 border-0 hover:from-green-700 hover:to-blue-700"
+            className="h-12 font-medium"
+            style={{ 
+              borderRadius: '8px',
+              background: 'linear-gradient(135deg, #10b981 0%, #3b82f6 100%)',
+              border: 'none'
+            }}
           >
             Create account
           </Button>
@@ -162,11 +171,11 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSwitchMode }) => {
 
       {/* Sign In Link */}
       <div className="text-center mt-6">
-        <span className="text-gray-600">Already have an account? </span>
+        <span className="text-gray-600 text-sm">Already have an account? </span>
         <Button
           type="link"
           onClick={() => onSwitchMode('login')}
-          className="p-0 text-green-600 hover:text-green-700 font-medium"
+          className="p-0 text-blue-600 hover:text-blue-700 font-medium text-sm"
         >
           Sign in
         </Button>
